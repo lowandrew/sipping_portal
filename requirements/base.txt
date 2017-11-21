@@ -12,7 +12,6 @@ django==1.10.8 # pyup: >=1.10,<1.11
 django-environ==0.4.4
 whitenoise==3.3.1
 
-
 # Forms
 django-crispy-forms==1.7.0
 
@@ -29,7 +28,6 @@ argon2-cffi==16.3.0
 # Well-built with regular release cycles!
 django-allauth==0.34.0
 
-
 # Python-PostgreSQL Database Adapter
 psycopg2==2.7.3.2
 
@@ -43,8 +41,12 @@ pytz==2017.3
 django-redis==4.8.0
 redis>=2.10.5
 
-
-
-
-
 # Your custom requirements go here
+django-multiselectfield==0.1.8
+django-bootstrap-form
+django-tables2
+django-background-tasks
+pandas
+numpy
+django-pandas
+django-multiupload

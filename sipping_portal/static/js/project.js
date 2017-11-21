@@ -1,5 +1,6 @@
 /* Project specific Javascript goes here. */
 
+
 /*
 Formatting hack to get around crispy-forms unfortunate hardcoding
 in helpers.FormHelper:
@@ -19,3 +20,4 @@ Issues with the above approach:
 4. Undocumented: No mention in the documentation, or it's too hard for me to find
 */
 $('.form-group').removeClass('row');
+

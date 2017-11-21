@@ -13,9 +13,14 @@ services:
       - postgres
     volumes:
       - .:/app
+      - /var/run/docker.sock:/var/run/docker.sock # send docker commands from the django docker container
+      - /usr/bin:/usr/bin # mount bin to access docker exec
     environment:
       - POSTGRES_USER=sipping_portal
       - USE_DOCKER=yes
+      - DOCKER_SOCKET=/var/run/docker.sock
+      - DOCKER_GROUP=dockerhost
+      - DOCKER_HOST=unix:///var/run/docker.sock
     ports:
       - "8000:8000"
     command: /start.sh
@@ -30,4 +35,15 @@ services:
     environment:
       - POSTGRES_USER=sipping_portal
 
-
+  genesippr:
+    ports:
+      - "8030:8030"
+    image: "sipprverse:v0.2"
+    container_name: sipping_portal_genesipprv2
+    tty: true
+    stdin_open: true
+    volumes:
+      - /mnt/nas/bio_requests/8312/newsixteens/targets/:/targets
+      - ./sipping_portal/media/:/sequences
+      - /var/run/docker.sock:/var/run/docker.sock # send docker commands from the django docker container
+      - /mnt/nas/Forest/live_sipping_testing/:/miseq
