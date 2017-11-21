@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load django_tables2 %}
+
+{% block content %}
+    <table id="table_id" class="table table-sm table-hover table-responsive table-bordered display">
+    <thead>
+        <tr>
+            <th>Folder <i class="fa fa-sort"></i></th>
+            <th>Date Added <i class="fa fa-sort"></i></th>
+            <th>Genesippr Status <i class="fa fa-sort"></i></th>
+            <th>Start Run</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for run in miseq_runs %}
+            <tr>
+                <td>{{ run.target_folder }}</td>
+                <td>{{ run.added_date }}</td>
+                <td>{{ run.genesippr_status }}</td>
+                {% if run.genesippr_status == 'Unprocessed' %}
+                    <td><button class="btn btn-primary btn-sm btn-block">Run</button></td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td>test</td>
+                <td>test</td>
+                <td>test</td>
+                <td>test</td>
+            </tr>
+            <tr>
+                <td>test</td>
+                <td>test</td>
+                <td>test</td>
+                <td>test</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+
+    {# For some awful reason I have to load the JS I need for dataTables on this HTML page. base.html won't extend.#}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript"
+            charset="utf8"
+            src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+
+    {# dataTables reference: https://www.datatables.net/manual/options #}
+    <script type="text/javascript">
+        $(document).ready( function () {
+            $('#table_id').DataTable(
+                {
+                    paging: false
+                }
+            );
+
+        } );
+    </script>
+
+
+
+
+{% endblock %}
+
