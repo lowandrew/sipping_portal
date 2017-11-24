@@ -2,56 +2,68 @@
 {% load django_tables2 %}
 
 {% block content %}
-    <table id="table_id" class="table table-sm table-hover table-responsive table-bordered display">
+
+    <h5>MiSeq Directory</h5>
+    <table id="miseq_directory" class="table table-sm table-hover table-responsive table-bordered display">
     <thead>
         <tr>
-            <th>Folder <i class="fa fa-sort"></i></th>
-            <th>Date Added <i class="fa fa-sort"></i></th>
-            <th>Genesippr Status <i class="fa fa-sort"></i></th>
+            <th>Folder Name</th>
+            <th>Date Added</th>
+            <th>Genesippr Status</th>
             <th>Start Run</th>
         </tr>
     </thead>
     <tbody>
         {% for run in miseq_runs %}
-            <tr>
+            <tr align="center">
                 <td>{{ run.target_folder }}</td>
                 <td>{{ run.added_date }}</td>
-                <td>{{ run.genesippr_status }}</td>
                 {% if run.genesippr_status == 'Unprocessed' %}
-                    <td><button class="btn btn-primary btn-sm btn-block">Run</button></td>
+                    <td class="table-info">{{ run.genesippr_status }}</td>
+                {% elif run.genesippr_status == 'Processing' %}
+                    <td class="table-primary">{{ run.genesippr_status }}</td>
+                {% elif run.genesippr_status == 'Failed' %}
+                    <td class="table-danger">{{ run.genesippr_status }}</td>
+                {% elif run.genesippr_status == 'Complete' %}
+                    <td class="table-success">{{ run.genesippr_status }}</td>
+                {% endif %}
+                {% if run.genesippr_status == 'Unprocessed' %}
+                    <td>
+                        <form method="post">{% csrf_token %}
+                                <input type="submit" value='{{ run.target_folder }}' name="miseq_run" >
+                        </form>
+                    </td>
+                {% elif run.genesippr_status == 'Processing' %}
+                    <td>
+                        <i class="fa fa-cog fa-spin fa-2x fa-fw"></i>
+                        <span class="sr-only">Loading...</span>
+                    </td>
                 {% else %}
                     <td></td>
                 {% endif %}
             </tr>
-            <tr>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-            </tr>
-            <tr>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-                <td>test</td>
-            </tr>
         {% endfor %}
     </tbody>
     </table>
+
+    <hr>
+
+{#    {% include 'sipper/current_run.html' %}#}
+
 
     {# For some awful reason I have to load the JS I need for dataTables on this HTML page. base.html won't extend.#}
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
             crossorigin="anonymous"></script>
 
-    <script type="text/javascript"
-            charset="utf8"
-            src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.js"></script>
+
 
     {# dataTables reference: https://www.datatables.net/manual/options #}
     <script type="text/javascript">
         $(document).ready( function () {
-            $('#table_id').DataTable(
+            $('#miseq_directory').DataTable(
                 {
                     paging: false
                 }
@@ -59,9 +71,6 @@
 
         } );
     </script>
-
-
-
 
 {% endblock %}
 
