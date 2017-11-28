@@ -16,10 +16,26 @@ class SipperRun(models.Model):
 
 class SippingMetadata(models.Model):
     run = models.OneToOneField(SipperRun, on_delete=models.CASCADE, primary_key=True)
+
+    # Location of logfile in filesystem
     log_filepath = models.CharField(max_length=512, default='N/A')
-    recent_output = models.CharField(max_length=512, default='N/A')
-    time_elapsed = models.CharField(max_length=64, default='N/A')
+
+    # Most recent lines from log file
+    # There's a nicer way to do this... alas...
+    recent_output_1 = models.CharField(max_length=512, default='-') # Most recent line in log
+    recent_output_1_time = models.CharField(max_length=512, default='-')
+    recent_output_2 = models.CharField(max_length=512, default='-')
+    recent_output_2_time = models.CharField(max_length=512, default='-')
+    recent_output_3 = models.CharField(max_length=512, default='-')
+    recent_output_3_time = models.CharField(max_length=512, default='-')
+    recent_output_4 = models.CharField(max_length=512, default='-')
+    recent_output_4_time = models.CharField(max_length=512, default='-')
+    recent_output_5 = models.CharField(max_length=512, default='-') # Fifth most recent line in log
+    recent_output_5_time = models.CharField(max_length=512, default='-')
+
     cycles = models.CharField(max_length=16, default='N/A')
+
+    # Metadata from log
     miseq_path = models.CharField(max_length=512, default='N/A')
     miseq_folder = models.CharField(max_length=512, default='N/A')
     fastq_destination = models.CharField(max_length=512, default='N/A')
