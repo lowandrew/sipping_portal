@@ -287,3 +287,6 @@ ADMIN_URL = r'^admin/'
 # Your common stuff: Below this line define 3rd party library settings
 # ------------------------------------------------------------------------------
 ALLOWED_HOSTS = ['0.0.0.0']
+
+# Allow Django-background-tasks to do things in parallel
+BACKGROUND_TASK_RUN_ASYNC = True
