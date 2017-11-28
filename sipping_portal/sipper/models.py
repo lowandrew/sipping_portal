@@ -15,8 +15,10 @@ class SipperRun(models.Model):
 
 
 class SippingMetadata(models.Model):
-    run = models.ForeignKey(SipperRun, on_delete=models.CASCADE)
-    recent_output = models.CharField(max_length=512, default="N/A")
+    run = models.OneToOneField(SipperRun, on_delete=models.CASCADE, primary_key=True)
+    log_filepath = models.CharField(max_length=512, default='N/A')
+    recent_output = models.CharField(max_length=512, default='N/A')
+    time_elapsed = models.CharField(max_length=64, default='N/A')
     cycles = models.CharField(max_length=16, default='N/A')
     miseq_path = models.CharField(max_length=512, default='N/A')
     miseq_folder = models.CharField(max_length=512, default='N/A')
