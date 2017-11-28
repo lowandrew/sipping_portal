@@ -3,6 +3,11 @@
 
 {% block content %}
 
+    <h5>Active Run</h5>
+        <div id="active-run">
+            {% include 'sipper/active_run.html' %}
+        </div>
+    <hr>
     <h5>MiSeq Directory</h5>
     <table id="miseq_directory" class="table table-sm table-hover table-responsive table-bordered display">
     <thead>
@@ -48,17 +53,11 @@
 
     <hr>
 
-{#    {% include 'sipper/current_run.html' %}#}
-
-
     {# For some awful reason I have to load the JS I need for dataTables on this HTML page. base.html won't extend.#}
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
             crossorigin="anonymous"></script>
 
-
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.16/datatables.min.js"></script>
-
 
     {# dataTables reference: https://www.datatables.net/manual/options #}
     <script type="text/javascript">
@@ -70,6 +69,34 @@
             );
 
         } );
+    </script>
+
+
+    {# Periodically refresh the status table #}
+    <script type="text/javascript">
+        function loadTables() {
+            $(document).ready(function(){
+                $('#active-run').load('active_run');
+            });
+        }
+
+        //Immediately load the tables
+        setTimeout(function() {
+            {% if run.genesippr_status == 'Processing' %}
+                console.log('Initial table loading');
+                loadTables();
+            {% endif %}
+        }, 1); //
+
+        //Periodically load the tables if and job status == 'Processing'
+        setInterval(function() {
+            {% for run in miseq_runs %}
+                {% if run.genesippr_status == 'Processing' %}
+                    console.log('Loading...');
+                    loadTables();
+                {% endif %}
+            {% endfor %}
+        }, 10000); // This reloads the <div> every 10 seconds.
     </script>
 
 {% endblock %}
