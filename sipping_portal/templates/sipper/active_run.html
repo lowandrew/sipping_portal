@@ -1,0 +1,40 @@
+{% block content %}
+
+{% if currently_processing_run.pk == None %}
+    <p>
+        Scanning for active runs...
+        <i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>
+    </p>
+
+{% else %}
+    <table class="table table-sm table-hover table-responsive table-bordered display">
+        <thead>
+            <tr>
+                <th>Folder</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ currently_processing_run.pk }}</td>
+                <td>{{ currently_processing_run.genesippr_status }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-hover table-responsive table-bordered display">
+        <thead>
+            <tr>
+                <th>Time Elapsed</th>
+                <th>Recent Output</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ current_run_metadata.time_elapsed }}</td>
+                <td>{{ current_run_metadata.recent_output }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endif %}
+
+{% endblock %}
