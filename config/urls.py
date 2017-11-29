@@ -5,7 +5,6 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
 
-from sipping_portal.sipper.views import FileSystemViewer, active_run
 
 urlpatterns = [
     url(r'^$', TemplateView.as_view(template_name='pages/home.html'), name='home'),
@@ -18,9 +17,8 @@ urlpatterns = [
     url(r'^users/', include('sipping_portal.users.urls', namespace='users')),
     url(r'^accounts/', include('allauth.urls')),
 
-    # Your stuff: custom urls includes go here
-    url(r'^miseq/$', FileSystemViewer.as_view(), name='miseq'),
-    url(r'^miseq/active_run$', active_run, name='active_run'),
+    # Custom urls includes go here
+    url(r'^miseq/', include('sipping_portal.sipper.urls', namespace='sipper')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
