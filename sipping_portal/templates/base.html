@@ -17,10 +17,13 @@
     <!-- Latest compiled and minified Bootstrap 4 beta CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 
-    <!-- Your stuff: Third-party CSS libraries go here -->
+    <!-- Third-party CSS libraries go here -->
     <link rel="stylesheet" href="{% static 'django_tables2/themes/paleblue/css/screen.css' %}" />
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.16/cr-1.4.1/r-2.2.0/rr-1.2.3/datatables.min.css"/>
+
+    <!-- Fonts -->
+
 
     <!-- This file stores project-specific CSS -->
     <link href="{% static 'css/project.css' %}" rel="stylesheet">
@@ -49,7 +52,10 @@
               <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'miseq' %}">MiSeq</a>
+              <a class="nav-link" href="{% url 'sipper:miseq' %}">MiSeq</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'sipper:active_run_standalone' %}">Active Run</a>
             </li>
           </ul>
         </div>
@@ -78,27 +84,21 @@
 
       {% endblock content %}
 
-    </div> <!-- /container -->
+    </div>
     {% block modal %}{% endblock modal %}
 
-    <!-- Javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
+
     {% block javascript %}
-      <!-- Required by Bootstrap v4 beta -->
       <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 
-      <!-- Your stuff: Third-party javascript libraries go here -->
+      <!-- Third-party javascript libraries go here -->
       <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.16/cr-1.4.1/r-2.2.0/rr-1.2.3/datatables.min.js"></script>
 
-      <!-- place project specific Javascript in this file -->
-
+      <!-- Project specific Javascript in this file -->
       <script src="{% static 'js/project.js' %}"></script>
-
     {% endblock javascript %}
-
 
   </body>
 </html>
