@@ -1,11 +1,13 @@
 {% block content %}
 
+{# Don't display active run table if there is nothing passed into currently_processing_run #}
 {% if currently_processing_run.pk == None %}
     <p>
         Scanning for active runs...
         <i class="fa fa-spinner fa-spin fa-1x fa-fw"></i>
     </p>
 
+{# Detected a run: showing the active run overview table #}
 {% else %}
     <table class="table table-sm table-responsive table-bordered display">
         <thead>
@@ -17,22 +19,27 @@
         <tbody>
             <tr>
                 <td>{{ currently_processing_run.pk }}</td>
+
+                {# Conditional formatting depending on genesippr status #}
                 {% if currently_processing_run.genesippr_status == 'Processing' %}
                     <td class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar">
                         {{ currently_processing_run.genesippr_status }}
                     </td>
                 {% elif currently_processing_run.genesippr_status == 'Complete' %}
-                    <td>
+                    <td class="table-success">
                         {{ currently_processing_run.genesippr_status }}
                     </td>
                 {% else %}
-                    <td>
+                    <td class="table-warning">
                         {{ currently_processing_run.genesippr_status }}
                     </td>
                 {% endif %}
+
             </tr>
         </tbody>
     </table>
+
+    {# Console log table #}
     <table class="table table-sm table-hover table-responsive display">
         <thead>
             <tr>
@@ -40,6 +47,7 @@
             </tr>
         </thead>
         <tbody>
+            {# Oldest output first, newest output last #}
             <tr>
                 <td>{{ current_run_metadata.recent_output_1_time }}</td>
                 <td>{{ current_run_metadata.recent_output_1 }}</td>
@@ -62,6 +70,7 @@
             </tr>
         </tbody>
     </table>
+
 {% endif %}
 
 {% endblock %}
