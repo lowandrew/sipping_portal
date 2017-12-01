@@ -1,4 +1,7 @@
+{% load static i18n %}
 {% block content %}
+
+<link href="{% static 'css/project.css' %}" rel="stylesheet">
 
 {# Don't display active run table if there is nothing passed into currently_processing_run #}
 {% if currently_processing_run.pk == None %}
@@ -40,7 +43,9 @@
     </table>
 
     {# Console log table #}
-    <table class="table table-sm table-hover table-responsive display">
+{#    <table class="table table-sm table-hover table-responsive display">#}
+{#    <table class="table table-sm table-hover table-responsive display">#}
+    <table class="console-log">
         <thead>
             <tr>
                 <th colspan="2">GenesipprV2 Console Output</th>
