@@ -74,8 +74,10 @@ def active_log_reader(json_model, json_metadata_model):
                                 read_log_metadata = False
 
                             # Break out of this horrific while loop
-                            if 'Analyses complete' in recent_output:
-                                continue_monitoring = False
+                            for line in recent_output:
+                                if 'Analyses complete' in line:
+                                    continue_monitoring = False
+                                    break
 
                             # Rather unfortunate looking model update
                             try:
@@ -110,7 +112,9 @@ def active_log_reader(json_model, json_metadata_model):
                             print('\nCANNOT DETECT OUTPUT. WAITING.')
                         sleep(20) # Update model every 20 seconds
 
+    # End task
     print('\nExited log monitor.')
+    return None
 
 @background(schedule=1)
 def run_genesippr(target_folder, json_model):
@@ -147,7 +151,10 @@ def run_genesippr(target_folder, json_model):
         obj.save(force_update=True)
         print('Updated genesippr_status to {}'.format(obj.object.genesippr_status))
 
+
+    # End task
     print('Genesippr job for {} complete'.format(target_folder))
+    return None
 
 
 def start_sipping(target_folder, json_model, json_metadata_model):
