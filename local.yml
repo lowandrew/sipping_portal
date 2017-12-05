@@ -38,7 +38,7 @@ services:
   genesippr:
     ports:
       - "8030:8030"
-    image: "olcbioinformatics/sipprverse:0.3"
+    image: "olcbioinformatics/sipprverse:v0.4"
     container_name: sippingportal_genesipprv2
     tty: true
     stdin_open: true
