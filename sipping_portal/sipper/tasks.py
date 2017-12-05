@@ -3,6 +3,8 @@ from subprocess import Popen, PIPE
 from time import sleep
 from background_task import background
 
+from .models import SipperRun
+
 
 def miseq_directory_list(cmd):
     """
@@ -46,71 +48,70 @@ def active_log_reader(json_model, json_metadata_model):
     # Read the metadata once
     read_log_metadata = True
 
-    # Variable to track whether or not to continue watching the log file
-    continue_monitoring = True
 
-    while continue_monitoring:
-        for obj in run_model:
-                for meta_obj in run_metadata_model:
-                    while obj.object.genesippr_status == 'Processing':
-                        raw_lines = read_logfile(meta_obj.object.log_filepath)
+    for obj in run_model:
+            for meta_obj in run_metadata_model:
+                while obj.object.genesippr_status == 'Processing':
+                    # Update genesippr status for object instance
+                    obj.object.genesippr_status = SipperRun.objects.get(pk=obj.object.pk).genesippr_status
 
-                        # Read if the log can be found
-                        if raw_lines is not None:
+                    raw_lines = read_logfile(meta_obj.object.log_filepath)
 
-                            # Parse the actual output lines
-                            recent_output = remove_extraneous_log_metadata(raw_lines)
+                    # Read if the log can be found
+                    if raw_lines is not None:
 
-                            # Read the log once for file locations
-                            if read_log_metadata:
-                                miseq_path, miseq_folder, fastq_destination, samplesheet = pull_log_metadata(raw_lines)
-                                meta_obj.object.miseq_path = miseq_path
-                                meta_obj.object.miseq_folder = miseq_folder
-                                meta_obj.object.fastq_destination = fastq_destination
-                                meta_obj.object.samplesheet = samplesheet
-                                meta_obj.save(force_update=True)
+                        # Parse the actual output lines
+                        recent_output = remove_extraneous_log_metadata(raw_lines)
 
-                                # Skip this next time around
-                                read_log_metadata = False
-
-                            # Break out of this horrific while loop
-                            for line in recent_output:
-                                if 'Analyses complete' in line:
-                                    continue_monitoring = False
-                                    break
-
-                            # Rather unfortunate looking model update
-                            try:
-                                meta_obj.object.recent_output_1_time, \
-                                meta_obj.object.recent_output_1 = time_content_log_split(recent_output[0])
-                            except IndexError:
-                                pass
-                            try:
-                                meta_obj.object.recent_output_2_time, \
-                                meta_obj.object.recent_output_2 = time_content_log_split(recent_output[1])
-                            except IndexError:
-                                pass
-                            try:
-                                meta_obj.object.recent_output_3_time, \
-                                meta_obj.object.recent_output_3 = time_content_log_split(recent_output[2])
-                            except IndexError:
-                                pass
-                            try:
-                                meta_obj.object.recent_output_4_time, \
-                                meta_obj.object.recent_output_4 = time_content_log_split(recent_output[3])
-                            except IndexError:
-                                pass
-                            try:
-                                meta_obj.object.recent_output_5_time, \
-                                meta_obj.object.recent_output_5 = time_content_log_split(recent_output[4])
-                            except IndexError:
-                                pass
-
-                            # Save model
+                        # Read the log once for file locations
+                        if read_log_metadata:
+                            miseq_path, miseq_folder, fastq_destination, samplesheet = pull_log_metadata(raw_lines)
+                            meta_obj.object.miseq_path = miseq_path
+                            meta_obj.object.miseq_folder = miseq_folder
+                            meta_obj.object.fastq_destination = fastq_destination
+                            meta_obj.object.samplesheet = samplesheet
                             meta_obj.save(force_update=True)
-                        else:
-                            print('\nCANNOT DETECT OUTPUT. WAITING.')
-                        sleep(20) # Update model every 20 seconds
+
+                            # Skip this next time around
+                            read_log_metadata = False
+
+                        # Break out of this horrific while loop
+                        for line in recent_output:
+                            if 'Analyses complete' in line:
+                                return None
+
+                        # Rather unfortunate looking model update
+                        try:
+                            meta_obj.object.recent_output_1_time, \
+                            meta_obj.object.recent_output_1 = time_content_log_split(recent_output[0])
+                        except IndexError:
+                            pass
+                        try:
+                            meta_obj.object.recent_output_2_time, \
+                            meta_obj.object.recent_output_2 = time_content_log_split(recent_output[1])
+                        except IndexError:
+                            pass
+                        try:
+                            meta_obj.object.recent_output_3_time, \
+                            meta_obj.object.recent_output_3 = time_content_log_split(recent_output[2])
+                        except IndexError:
+                            pass
+                        try:
+                            meta_obj.object.recent_output_4_time, \
+                            meta_obj.object.recent_output_4 = time_content_log_split(recent_output[3])
+                        except IndexError:
+                            pass
+                        try:
+                            meta_obj.object.recent_output_5_time, \
+                            meta_obj.object.recent_output_5 = time_content_log_split(recent_output[4])
+                        except IndexError:
+                            pass
+
+                        # Save model
+                        meta_obj.save(force_update=True)
+                    else:
+                        print('\nCANNOT DETECT OUTPUT. WAITING.')
+                    sleep(20) # Update model every 20 seconds
 
     # End task
     print('\nExited log monitor.')
