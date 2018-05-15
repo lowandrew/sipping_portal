@@ -133,17 +133,17 @@ def run_genesippr(target_folder, json_model):
     # Make output folder
     print('\nCreating output folder for genesippr...')
     mkdir_cmd = 'docker exec sippingportal_genesipprv2 ' \
-                'mkdir miseq_output/{}'.format(target_folder)
+                'mkdir /miseq_output/{}'.format(target_folder)
     execute_command(mkdir_cmd)
 
     # Run genesippr
     print('\nRunning genesippr...')
-    genesippr_cmd = 'docker exec sippingportal_genesipprv2 ' \
-                    'method.py miseq_output/{target_folder} ' \
-                    '-t /targets ' \
+    genesippr_cmd = 'docker exec sippingportal_genesipprv2 /bin/bash -c "source activate genesippr && ' \
+                    'python method.py -o /miseq_output/{target_folder} ' \
+                    '-r /home/ubuntu/targets ' \
                     '-m /miseq ' \
                     '-f {target_folder} ' \
-                    '-b -C -r2 0'.format(target_folder=target_folder)
+                    '-C -r2 0 -r1 100"'.format(target_folder=target_folder)
     execute_command(genesippr_cmd)
 
     # Update model status

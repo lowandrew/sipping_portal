@@ -17,7 +17,8 @@ class FileSystemViewer(TemplateView):
     def get(self, request, *args, **kwargs):
 
         # Check for new runs, and create objects for them as necessary.
-        folders = miseq_directory_list('ls miseq')
+        # TODO: Add in a check that the folder name/contents actually look like a miseq run
+        folders = miseq_directory_list('ls /miseq')
         for folder in folders:
             if not SipperRun.objects.filter(target_folder=folder.decode('utf-8')).exists():
                 SipperRun.objects.create(target_folder=folder.decode('utf-8'))

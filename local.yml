@@ -15,6 +15,7 @@ services:
       - .:/app
       - /var/run/docker.sock:/var/run/docker.sock # send docker commands from the django docker container
       - /usr/bin:/usr/bin # mount bin to access docker exec
+      - /mnt/nas/Forest/live_sipping_testing/miseq_data:/miseq # user's local miseq must be mounted to /miseq here
     environment:
       - POSTGRES_USER=sipping_portal
       - USE_DOCKER=yes
@@ -38,7 +39,7 @@ services:
   genesippr:
     ports:
       - "8030:8030"
-    image: "olcbioinformatics/sipprverse:v0.4"
+    image: "olcbioinformatics/sipprverse:latest"
     container_name: sippingportal_genesipprv2
     tty: true
     stdin_open: true
