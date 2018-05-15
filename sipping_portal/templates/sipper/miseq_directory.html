@@ -1,0 +1,63 @@
+{% block content %}
+
+{# MiSeq directory table #}
+<table id="miseq-directory-table" class="table table-sm table-hover table-responsive table-bordered display">
+    <thead>
+        <tr>
+            <th>Folder Name</th>
+            <th>Date Added</th>
+            <th>Genesippr Status</th>
+            <th>Start Run</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {# Create a row for every MiSeq run detected#}
+        {% for run in miseq_runs %}
+            <tr>
+                <td>{{ run.target_folder }}</td>
+
+                {#  Pass date through a filter to make it simpler #}
+                <td>{{ run.added_date|date:"Y-m-d" }}</td>
+
+                {# Conditional formatting for status column#}
+                {% if run.genesippr_status == 'Unprocessed' %}
+                    <td class="table-info">{{ run.genesippr_status }}</td>
+                {% elif run.genesippr_status == 'Processing' %}
+                    <td class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar">
+                        {{ run.genesippr_status }}
+                    </td>
+                {% elif run.genesippr_status == 'Failed' %}
+                    <td class="table-danger">{{ run.genesippr_status }}</td>
+                {% elif run.genesippr_status == 'Complete' %}
+                    <td class="table-success">{{ run.genesippr_status }}</td>
+                {% endif %}
+
+                {# Check to make sure no runs are currently processing before displaying run buttons #}
+                {% if num_processing_runs == 0 %}
+                    {# Show buttons for unprocessed runs #}
+                    {% if run.genesippr_status == 'Unprocessed'%}
+                        <td>
+                            <form method="post">{% csrf_token %}
+                                    <input type="submit" value='{{ run.target_folder }}' name="miseq_run_target" >
+                            </form>
+                        </td>
+                    {% else %}
+                        <td>-</td>
+                    {% endif %}
+
+                {% else %}
+                    <td>-</td>
+                {% endif %}
+
+                {% if run.genesippr_status == 'Complete' %}
+                    <td>Click for details</td>
+                {% else %}
+                    <td>-</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
