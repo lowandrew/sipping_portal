@@ -104,6 +104,8 @@ def active_run(request):
     context = {
         'currently_processing_run': currently_processing_run,
         'current_run_metadata': current_run_metadata,
+        'currently_processing_run' : currently_processing_run,
+        'current_run_metadata' : current_run_metadata,
     }
 
     return render(request,
